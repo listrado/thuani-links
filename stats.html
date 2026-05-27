@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f3e9db">
+<meta name="robots" content="noindex, nofollow">
+<title>Estatísticas · Thuani Todeschini</title>
+<link rel="icon" type="image/jpeg" href="favicon.jpg">
+<link rel="apple-touch-icon" href="favicon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream-light: #faf3e7;
+    --cream: #f3e9db;
+    --cream-warm: #ebdec8;
+    --taupe: #d4c2a8;
+    --honey: #c9a87a;
+    --honey-deep: #b08d5e;
+    --mocha: #8b6f4e;
+    --cocoa: #4a3a2a;
+    --cocoa-deep: #2e2419;
+    --text: #3a2e22;
+    --text-soft: rgba(58, 46, 34, 0.6);
+    --text-muted: rgba(58, 46, 34, 0.45);
+    --glass: rgba(255, 252, 245, 0.55);
+    --glass-border: rgba(176, 141, 94, 0.18);
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 32px 20px 80px;
+  }
+
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(235, 222, 200, 0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 30%, rgba(201, 168, 122, 0.18) 0%, transparent 50%),
+      radial-gradient(ellipse 70% 50% at 20% 70%, rgba(212, 194, 168, 0.25) 0%, transparent 55%),
+      linear-gradient(180deg, var(--cream-light) 0%, var(--cream) 50%, var(--cream-warm) 100%);
+  }
+  .bg-noise {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    opacity: 0.4; mix-blend-mode: multiply;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  header .eyebrow {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(28px, 6vw, 38px);
+    letter-spacing: -0.01em;
+    color: var(--cocoa);
+  }
+  header .updated {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .summary .card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 20px 22px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .summary .label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .summary .value {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(28px, 7vw, 40px);
+    line-height: 1;
+    color: var(--cocoa);
+    letter-spacing: -0.02em;
+  }
+  .summary .sub {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--text-soft);
+  }
+
+  section.group {
+    margin-bottom: 28px;
+  }
+  section.group h2 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--mocha);
+    margin-bottom: 12px;
+    padding-left: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  section.group h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--glass-border), transparent);
+  }
+
+  .row {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .row .bar {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: linear-gradient(90deg, rgba(201, 168, 122, 0.18), rgba(201, 168, 122, 0.06));
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+  }
+  .row .title, .row .stat { position: relative; z-index: 1; }
+  .row .title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--cocoa);
+  }
+  .row .title .meta {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+  }
+  .row .stat {
+    text-align: right;
+  }
+  .row .stat .count {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--cocoa-deep);
+    line-height: 1;
+  }
+  .row .stat .unique {
+    display: block;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .row.zero .stat .count { color: var(--text-muted); }
+  .row.top1 { border-color: rgba(176, 141, 94, 0.35); }
+  .row.top1 .stat .count { color: var(--honey-deep); }
+
+  .loading-msg {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-soft);
+    font-size: 14px;
+  }
+
+  .error-msg {
+    text-align: center;
+    padding: 20px;
+    color: #a04040;
+    font-size: 13px;
+    background: rgba(160, 64, 64, 0.06);
+    border: 1px solid rgba(160, 64, 64, 0.18);
+    border-radius: 12px;
+    margin: 12px 0;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  footer a {
+    color: var(--mocha);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(139, 111, 78, 0.3);
+  }
+  footer a:hover { color: var(--cocoa); border-color: var(--cocoa); }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .controls button {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .controls button:hover { background: var(--glass); color: var(--cocoa); }
+
+  @media (max-width: 480px) {
+    body { padding: 20px 14px 60px; }
+    .summary { grid-template-columns: 1fr; }
+    .row { padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-canvas"></div>
+<div class="bg-noise"></div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Estatísticas</div>
+    <h1>Thuani · Cliques</h1>
+    <div class="updated" id="updated">Carregando…</div>
+  </header>
+
+  <div class="summary">
+    <div class="card">
+      <div class="label">Cliques totais</div>
+      <div class="value" id="total-clicks">—</div>
+      <div class="sub">acumulado desde sempre</div>
+    </div>
+    <div class="card">
+      <div class="label">Link mais clicado</div>
+      <div class="value" id="top-link" style="font-size: clamp(16px, 4vw, 22px); font-family: 'Outfit', sans-serif; font-weight: 500;">—</div>
+      <div class="sub" id="top-count">—</div>
+    </div>
+  </div>
+
+  <div id="content">
+    <div class="loading-msg">Buscando dados do GoatCounter…</div>
+  </div>
+
+  <footer>
+    Dados em tempo real de <a href="https://thuani.goatcounter.com" target="_blank" rel="noopener">thuani.goatcounter.com</a> ·
+    <a href="./">voltar ao site</a>
+  </footer>
+</div>
+
+<script>
+  const SITE = 'https://thuani.goatcounter.com';
+
+  const GROUPS = [
+    {
+      title: 'Outside 28 · Petala Beauty',
+      links: [
+        { slug: 'link-outside-28-perfume',                  label: 'Outside 28 · Perfume' },
+        { slug: 'link-kit-outside-28-essencia-completa',    label: 'Kit Outside 28 Essência Completa' },
+        { slug: 'link-hidratante-outside-28',               label: 'Hidratante Outside 28' },
+        { slug: 'link-body-splash-outside-28',              label: 'Body Splash Outside 28' },
+        { slug: 'link-laguna-store',                        label: 'Laguna Store' }
+      ]
+    },
+    {
+      title: 'Polishop',
+      links: [
+        { slug: 'link-prancha-secadora-airliss',            label: 'Prancha Secadora Airliss' },
+        { slug: 'link-escova-hot-brush-4-em-1',             label: 'Escova Hot Brush 4 em 1' },
+        { slug: 'link-escova-modeladora-infraliss',         label: 'Escova Modeladora Infraliss' }
+      ]
+    },
+    {
+      title: 'Outros parceiros',
+      links: [
+        { slug: 'link-teeva-official',                      label: 'Teeva Official' },
+        { slug: 'link-temu-achadinhos',                     label: 'Temu · Achadinhos' }
+      ]
+    },
+    {
+      title: 'Redes sociais',
+      links: [
+        { slug: 'social-instagram',                         label: 'Instagram' },
+        { slug: 'social-tiktok',                            label: 'TikTok' }
+      ]
+    },
+    {
+      title: 'Contato',
+      links: [
+        { slug: 'email',                                    label: 'Email' }
+      ]
+    }
+  ];
+
+  function parseInt0(v) {
+    if (v === null || v === undefined) return 0;
+    const n = parseInt(String(v).replace(/[^0-9]/g, ''), 10);
+    return isNaN(n) ? 0 : n;
+  }
+
+  async function fetchCount(slug) {
+    try {
+      const url = `${SITE}/counter/${encodeURIComponent(slug)}.json`;
+      const res = await fetch(url, { mode: 'cors' });
+      if (!res.ok) return { count: 0, count_unique: 0, ok: false };
+      const data = await res.json();
+      return {
+        count: parseInt0(data.count),
+        count_unique: parseInt0(data.count_unique),
+        ok: true
+      };
+    } catch (e) {
+      return { count: 0, count_unique: 0, ok: false, err: e.message };
+    }
+  }
+
+  function fmtTime(d) {
+    return d.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+  }
+
+  function render(allData) {
+    const container = document.getElementById('content');
+    container.innerHTML = '';
+
+    // Find max across all to scale bars
+    let maxCount = 0;
+    let topLink = null;
+    let totalClicks = 0;
+    GROUPS.forEach(g => g.links.forEach(l => {
+      const d = allData[l.slug];
+      if (!d) return;
+      totalClicks += d.count;
+      if (d.count > maxCount) { maxCount = d.count; topLink = { label: l.label, count: d.count }; }
+    }));
+
+    // Update summary cards
+    document.getElementById('total-clicks').textContent = totalClicks.toLocaleString('pt-BR');
+    if (topLink && topLink.count > 0) {
+      document.getElementById('top-link').textContent = topLink.label;
+      document.getElementById('top-count').textContent = `${topLink.count.toLocaleString('pt-BR')} clique${topLink.count === 1 ? '' : 's'}`;
+    } else {
+      document.getElementById('top-link').textContent = '—';
+      document.getElementById('top-count').textContent = 'aguardando primeiros cliques';
+    }
+
+    // Render groups
+    GROUPS.forEach(group => {
+      const section = document.createElement('section');
+      section.className = 'group';
+      const h2 = document.createElement('h2');
+      h2.textContent = group.title;
+      section.appendChild(h2);
+
+      // Sort within group by count desc
+      const sorted = group.links.slice().sort((a, b) => {
+        const da = allData[a.slug]?.count || 0;
+        const db = allData[b.slug]?.count || 0;
+        return db - da;
+      });
+
+      sorted.forEach(link => {
+        const d = allData[link.slug] || { count: 0, count_unique: 0 };
+        const row = document.createElement('div');
+        row.className = 'row';
+        if (d.count === 0) row.classList.add('zero');
+        if (topLink && link.label === topLink.label && d.count > 0) row.classList.add('top1');
+
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        const pct = maxCount > 0 ? (d.count / maxCount) * 100 : 0;
+        row.appendChild(bar);
+
+        const titleEl = document.createElement('div');
+        titleEl.className = 'title';
+        titleEl.innerHTML = `${link.label}<span class="meta">${link.slug}</span>`;
+        row.appendChild(titleEl);
+
+        const statEl = document.createElement('div');
+        statEl.className = 'stat';
+        statEl.innerHTML = `<span class="count">${d.count.toLocaleString('pt-BR')}</span><span class="unique">${d.count_unique.toLocaleString('pt-BR')} únicos</span>`;
+        row.appendChild(statEl);
+
+        section.appendChild(row);
+
+        // Animate bar
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => { bar.style.width = pct + '%'; });
+        });
+      });
+
+      container.appendChild(section);
+    });
+
+    document.getElementById('updated').textContent = 'Atualizado: ' + fmtTime(new Date());
+  }
+
+  async function load() {
+    const allSlugs = GROUPS.flatMap(g => g.links.map(l => l.slug));
+    const results = await Promise.all(allSlugs.map(s => fetchCount(s).then(r => [s, r])));
+    const allData = Object.fromEntries(results);
+
+    // Check if any call succeeded
+    const anyOk = results.some(([, r]) => r.ok);
+    if (!anyOk) {
+      document.getElementById('content').innerHTML =
+        '<div class="error-msg">Não consegui buscar os dados do GoatCounter. ' +
+        'Verifique se o site está com <strong>Settings → "Allow access to the visitor counter"</strong> ativado, ' +
+        'ou se há algum bloqueador filtrando <code>gc.zgo.at</code> / <code>goatcounter.com</code>.</div>';
+      document.getElementById('updated').textContent = 'Erro ao carregar';
+      return;
+    }
+
+    render(allData);
+  }
+
+  load();
+
+  // Refresh button
+  document.addEventListener('DOMContentLoaded', () => {
+    // Could add a refresh button if desired
+  });
+</script>
+
+</body>
+</html>
