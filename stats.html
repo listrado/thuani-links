@@ -447,7 +447,13 @@
         { slug: 'link-outside-28-perfume',                  label: 'Outside 28 · Perfume' },
         { slug: 'link-kit-outside-28-essencia-completa',    label: 'Kit Outside 28 Essência Completa' },
         { slug: 'link-hidratante-outside-28',               label: 'Hidratante Outside 28' },
-        { slug: 'link-body-splash-outside-28',              label: 'Body Splash Outside 28' },
+        { slug: 'link-body-splash-outside-28',              label: 'Body Splash Outside 28' }
+      ]
+    },
+    {
+      title: 'Laguna',
+      color: '#d9b685',
+      links: [
         { slug: 'link-laguna-store',                        label: 'Laguna Store' }
       ]
     },
@@ -543,8 +549,10 @@
 
   async function fetchCount(slug, params) {
     try {
+      // GoatCounter sets cache-control: public + expires 4h ahead on /counter/*.json,
+      // so without no-store the browser serves stale data on normal reload.
       const url = `${SITE}/counter/${encodeURIComponent(slug)}.json${params}`;
-      const res = await fetch(url, { mode: 'cors' });
+      const res = await fetch(url, { mode: 'cors', cache: 'no-store' });
       // GoatCounter returns 404 with valid JSON for zero-count paths
       const data = await res.json();
       return {
