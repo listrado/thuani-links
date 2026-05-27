@@ -294,7 +294,7 @@
 </div>
 
 <script>
-  const SITE = 'https://thuani.goatcounter.com';
+  const SITE = 'https://thuani-tracker.llucas-cardi-rangel.workers.dev';
 
   const GROUPS = [
     {
@@ -347,7 +347,8 @@
     try {
       const url = `${SITE}/counter/${encodeURIComponent(slug)}.json`;
       const res = await fetch(url, { mode: 'cors' });
-      if (!res.ok) return { count: 0, count_unique: 0, ok: false };
+      // GoatCounter returns 404 with valid JSON body {"count":"0","count_unique":"0"}
+      // for paths with no data yet, so parse regardless of status code.
       const data = await res.json();
       return {
         count: parseInt0(data.count),
@@ -444,13 +445,13 @@
     const results = await Promise.all(allSlugs.map(s => fetchCount(s).then(r => [s, r])));
     const allData = Object.fromEntries(results);
 
-    // Check if any call succeeded
+    // Check if any call succeeded (returned parseable JSON)
     const anyOk = results.some(([, r]) => r.ok);
     if (!anyOk) {
       document.getElementById('content').innerHTML =
-        '<div class="error-msg">Não consegui buscar os dados do GoatCounter. ' +
-        'Verifique se o site está com <strong>Settings → "Allow access to the visitor counter"</strong> ativado, ' +
-        'ou se há algum bloqueador filtrando <code>gc.zgo.at</code> / <code>goatcounter.com</code>.</div>';
+        '<div class="error-msg">Não consegui buscar os dados. ' +
+        'Verifique se o Worker em <code>' + SITE + '</code> está ativo, ' +
+        'ou se há um bloqueador filtrando o subdomínio.</div>';
       document.getElementById('updated').textContent = 'Erro ao carregar';
       return;
     }
