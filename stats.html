@@ -521,33 +521,42 @@
            String(d.getDate()).padStart(2,'0');
   }
 
+  function addDays(d, n) {
+    const out = new Date(d);
+    out.setDate(out.getDate() + n);
+    return out;
+  }
+
   function periodToParams(period) {
+    // GoatCounter treats end= as EXCLUSIVE (data on the end date itself
+    // is not included). So we always send end = the day AFTER what we
+    // really want, to make the range inclusive from the user's POV.
     const today = new Date();
+    const tomorrow = fmtDate(addDays(today, 1));
+
     if (period === 'all') {
-      // GoatCounter heavily caches the no-params /counter/PATH.json
-      // (cache-control: public + expires 4h ahead). Sending a wide
-      // date range gets us on a different (and less stale) cache key,
-      // and the daily-rotating end date busts the cache once per day.
-      return '?start=2020-01-01&end=' + fmtDate(today);
+      // Wide range also dodges the heavily-cached no-params cache key.
+      return '?start=2020-01-01&end=' + tomorrow;
     }
     if (period === 'today') {
-      const t = fmtDate(today);
-      return '?start=' + t + '&end=' + t;
+      return '?start=' + fmtDate(today) + '&end=' + tomorrow;
     }
     if (period === '7d') {
-      const start = new Date(today); start.setDate(start.getDate() - 6);
-      return '?start=' + fmtDate(start) + '&end=' + fmtDate(today);
+      return '?start=' + fmtDate(addDays(today, -6)) + '&end=' + tomorrow;
     }
     if (period === '30d') {
-      const start = new Date(today); start.setDate(start.getDate() - 29);
-      return '?start=' + fmtDate(start) + '&end=' + fmtDate(today);
+      return '?start=' + fmtDate(addDays(today, -29)) + '&end=' + tomorrow;
     }
     if (period === 'custom') {
       const s = state.customStart, e = state.customEnd;
       if (!s && !e) return '';
       const parts = [];
       if (s) parts.push('start=' + s);
-      if (e) parts.push('end=' + e);
+      if (e) {
+        // Add 1 day so the user's chosen end date is actually included.
+        const endPlus = fmtDate(addDays(new Date(e + 'T00:00:00'), 1));
+        parts.push('end=' + endPlus);
+      }
       return '?' + parts.join('&');
     }
     return '';
