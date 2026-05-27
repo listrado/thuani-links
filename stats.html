@@ -233,44 +233,58 @@
 
   /* Groups */
   section.group {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    border-radius: 18px;
-    margin-bottom: 12px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    overflow: hidden;
+    margin-bottom: 28px;
   }
   section.group summary {
     list-style: none;
     cursor: pointer;
-    padding: 14px 18px;
-    display: flex; align-items: center; gap: 12px;
+    padding: 0 4px 12px;
+    display: flex; align-items: center; gap: 10px;
     user-select: none;
+    transition: opacity 0.15s;
   }
+  section.group summary,
+  section.group summary * { cursor: pointer; }
+  section.group summary:hover { opacity: 0.7; }
+  section.group summary:hover .chev { opacity: 1; }
   section.group summary::-webkit-details-marker { display: none; }
-  section.group .chev {
-    width: 12px; height: 12px;
-    border-right: 1.5px solid var(--mocha);
-    border-bottom: 1.5px solid var(--mocha);
-    transform: rotate(45deg);
-    transition: transform 0.2s;
-    flex-shrink: 0;
-    margin-top: -3px;
-  }
-  section.group[open] .chev { transform: rotate(-135deg); margin-top: 3px; }
   section.group .grp-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--mocha);
+    flex-shrink: 0;
+  }
+  section.group .grp-spacer {
     flex: 1;
-    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--mocha); font-weight: 500;
+    height: 1px;
+    background: linear-gradient(90deg, var(--glass-border), transparent);
+    min-width: 12px;
   }
   section.group .grp-total {
     font-family: 'Fraunces', serif;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--cocoa);
     font-variant-numeric: tabular-nums;
+    line-height: 1;
   }
-  section.group .rows { padding: 0 12px 12px; }
+  section.group .chev {
+    width: 8px; height: 8px;
+    border-right: 1.5px solid var(--mocha);
+    border-bottom: 1.5px solid var(--mocha);
+    transform: rotate(45deg);
+    transition: transform 0.2s, opacity 0.2s;
+    flex-shrink: 0;
+    margin-top: -3px;
+    opacity: 0.45;
+  }
+  section.group[open] .chev {
+    transform: rotate(-135deg);
+    margin-top: 3px;
+  }
+  section.group .rows { padding: 0; }
 
   .row {
     background: rgba(255, 252, 245, 0.4);
@@ -646,9 +660,10 @@
 
       const summary = document.createElement('summary');
       summary.innerHTML = `
-        <span class="chev"></span>
         <span class="grp-title">${group.title}</span>
+        <span class="grp-spacer"></span>
         <span class="grp-total">${groupTotal.toLocaleString('pt-BR')}</span>
+        <span class="chev"></span>
       `;
       details.appendChild(summary);
 
