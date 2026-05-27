@@ -231,23 +231,32 @@
   }
   .summary .sub { margin-top: 6px; font-size: 12px; color: var(--text-soft); }
 
-  /* Groups */
+  /* Groups: one big card per group, summary = clickable header */
   section.group {
-    margin-bottom: 28px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    overflow: hidden;
   }
   section.group summary {
     list-style: none;
-    cursor: pointer;
-    padding: 0 4px 12px;
-    display: flex; align-items: center; gap: 10px;
+    cursor: pointer !important;
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 12px;
     user-select: none;
-    transition: opacity 0.15s;
+    transition: background 0.18s;
+    -webkit-tap-highlight-color: transparent;
   }
-  section.group summary,
-  section.group summary * { cursor: pointer; }
-  section.group summary:hover { opacity: 0.7; }
+  section.group summary * { cursor: pointer !important; }
+  section.group summary:hover { background: rgba(201, 168, 122, 0.1); }
   section.group summary:hover .chev { opacity: 1; }
+  section.group summary:active { background: rgba(201, 168, 122, 0.18); }
+  section.group[open] summary { border-bottom: 1px solid var(--glass-border); }
   section.group summary::-webkit-details-marker { display: none; }
+  section.group summary::marker { content: ''; }
   section.group .grp-title {
     font-family: 'Outfit', sans-serif;
     font-weight: 500;
@@ -265,26 +274,30 @@
   }
   section.group .grp-total {
     font-family: 'Fraunces', serif;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--cocoa);
     font-variant-numeric: tabular-nums;
     line-height: 1;
   }
   section.group .chev {
-    width: 8px; height: 8px;
+    width: 9px; height: 9px;
     border-right: 1.5px solid var(--mocha);
     border-bottom: 1.5px solid var(--mocha);
     transform: rotate(45deg);
     transition: transform 0.2s, opacity 0.2s;
     flex-shrink: 0;
-    margin-top: -3px;
-    opacity: 0.45;
+    margin-top: -4px;
+    opacity: 0.55;
   }
   section.group[open] .chev {
     transform: rotate(-135deg);
     margin-top: 3px;
   }
-  section.group .rows { padding: 0; }
+  section.group .rows { padding: 10px 12px 12px; }
+  /* Inner link rows: lighter background since they're nested in the group card */
+  section.group .row {
+    background: rgba(255, 252, 245, 0.55);
+  }
 
   .row {
     background: rgba(255, 252, 245, 0.4);
