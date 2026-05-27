@@ -451,6 +451,7 @@
     .hero { border-radius: 0 0 32px 32px; }
   }
 </style>
+<script data-goatcounter="https://thuani.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 <div class="bg-canvas"></div>
@@ -587,5 +588,42 @@
 
   </div>
 </div>
+<script>
+  (function () {
+    function slug(s) {
+      return (s || '')
+        .toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/&[a-z]+;/g, '-')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+    function eventName(a) {
+      if (a.classList.contains('social-btn')) {
+        return 'social-' + slug(a.getAttribute('aria-label') || a.href);
+      }
+      if (a.classList.contains('email-link')) return 'email';
+      var t = a.querySelector('.link-title');
+      if (t && t.textContent) return 'link-' + slug(t.textContent);
+      try { return 'link-' + slug(new URL(a.href, location.href).hostname); }
+      catch (e) { return 'link-unknown'; }
+    }
+    function track(ev) {
+      var a = ev.currentTarget;
+      if (!window.goatcounter || !window.goatcounter.count) return;
+      var titleEl = a.querySelector('.link-title');
+      window.goatcounter.count({
+        path:  eventName(a),
+        title: titleEl ? titleEl.textContent.trim() : (a.getAttribute('aria-label') || a.href),
+        event: true
+      });
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('a.link-btn, a.social-btn, a.email-link').forEach(function (a) {
+        a.addEventListener('click', track);
+      });
+    });
+  })();
+</script>
 </body>
 </html>
