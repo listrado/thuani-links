@@ -232,7 +232,7 @@
   .summary .sub { margin-top: 6px; font-size: 12px; color: var(--text-soft); }
 
   /* Groups: one big card per group, summary = clickable header */
-  section.group {
+  details.group {
     background: var(--glass);
     border: 1px solid var(--glass-border);
     border-radius: 18px;
@@ -241,7 +241,7 @@
     -webkit-backdrop-filter: blur(8px);
     overflow: hidden;
   }
-  section.group summary {
+  details.group summary {
     list-style: none;
     cursor: pointer !important;
     padding: 16px 20px;
@@ -250,14 +250,14 @@
     transition: background 0.18s;
     -webkit-tap-highlight-color: transparent;
   }
-  section.group summary * { cursor: pointer !important; }
-  section.group summary:hover { background: rgba(201, 168, 122, 0.1); }
-  section.group summary:hover .chev { opacity: 1; }
-  section.group summary:active { background: rgba(201, 168, 122, 0.18); }
-  section.group[open] summary { border-bottom: 1px solid var(--glass-border); }
-  section.group summary::-webkit-details-marker { display: none; }
-  section.group summary::marker { content: ''; }
-  section.group .grp-title {
+  details.group summary * { cursor: pointer !important; }
+  details.group summary:hover { background: rgba(201, 168, 122, 0.1); }
+  details.group summary:hover .chev { opacity: 1; }
+  details.group summary:active { background: rgba(201, 168, 122, 0.18); }
+  details.group[open] summary { border-bottom: 1px solid var(--glass-border); }
+  details.group summary::-webkit-details-marker { display: none; }
+  details.group summary::marker { content: ''; }
+  details.group .grp-title {
     font-family: 'Outfit', sans-serif;
     font-weight: 500;
     font-size: 11px;
@@ -266,20 +266,20 @@
     color: var(--mocha);
     flex-shrink: 0;
   }
-  section.group .grp-spacer {
+  details.group .grp-spacer {
     flex: 1;
     height: 1px;
     background: linear-gradient(90deg, var(--glass-border), transparent);
     min-width: 12px;
   }
-  section.group .grp-total {
+  details.group .grp-total {
     font-family: 'Fraunces', serif;
     font-size: 16px;
     color: var(--cocoa);
     font-variant-numeric: tabular-nums;
     line-height: 1;
   }
-  section.group .chev {
+  details.group .chev {
     width: 9px; height: 9px;
     border-right: 1.5px solid var(--mocha);
     border-bottom: 1.5px solid var(--mocha);
@@ -289,13 +289,13 @@
     margin-top: -4px;
     opacity: 0.55;
   }
-  section.group[open] .chev {
+  details.group[open] .chev {
     transform: rotate(-135deg);
     margin-top: 3px;
   }
-  section.group .rows { padding: 10px 12px 12px; }
+  details.group .rows { padding: 10px 12px 12px; }
   /* Inner link rows: lighter background since they're nested in the group card */
-  section.group .row {
+  details.group .row {
     background: rgba(255, 252, 245, 0.55);
   }
 
@@ -368,7 +368,7 @@
 <div class="wrap">
   <header>
     <div class="eyebrow">Estatísticas</div>
-    <h1>Cliques · Thuani</h1>
+    <h1>Thuani · Cliques</h1>
     <div class="updated" id="updated">Carregando…</div>
   </header>
 
