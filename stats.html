@@ -523,7 +523,13 @@
 
   function periodToParams(period) {
     const today = new Date();
-    if (period === 'all') return '';
+    if (period === 'all') {
+      // GoatCounter heavily caches the no-params /counter/PATH.json
+      // (cache-control: public + expires 4h ahead). Sending a wide
+      // date range gets us on a different (and less stale) cache key,
+      // and the daily-rotating end date busts the cache once per day.
+      return '?start=2020-01-01&end=' + fmtDate(today);
+    }
     if (period === 'today') {
       const t = fmtDate(today);
       return '?start=' + t + '&end=' + t;
