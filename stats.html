@@ -28,6 +28,7 @@
     --text-soft: rgba(58, 46, 34, 0.6);
     --text-muted: rgba(58, 46, 34, 0.45);
     --glass: rgba(255, 252, 245, 0.55);
+    --glass-strong: rgba(255, 252, 245, 0.75);
     --glass-border: rgba(176, 141, 94, 0.18);
   }
 
@@ -56,207 +57,281 @@
     opacity: 0.4; mix-blend-mode: multiply;
   }
 
-  .wrap {
-    max-width: 720px;
-    margin: 0 auto;
-  }
+  .wrap { max-width: 720px; margin: 0 auto; }
 
-  header {
-    text-align: center;
-    margin-bottom: 36px;
-  }
+  header { text-align: center; margin-bottom: 28px; }
   header .eyebrow {
-    font-family: 'Outfit', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 8px;
+    font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
   }
   header h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
-    font-size: clamp(28px, 6vw, 38px);
-    letter-spacing: -0.01em;
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(28px, 6vw, 38px); letter-spacing: -0.01em;
     color: var(--cocoa);
   }
-  header .updated {
+  header .updated { margin-top: 10px; font-size: 12px; color: var(--text-muted); }
+
+  /* Date range selector */
+  .period {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin-bottom: 22px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .period .label {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .period .label svg { width: 14px; height: 14px; opacity: 0.6; }
+  .period .options {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .period .opt {
+    flex: 1; min-width: 60px;
+    padding: 8px 12px; border-radius: 999px;
+    background: transparent; border: 1px solid var(--glass-border);
+    color: var(--text-soft); cursor: pointer; font: inherit; font-size: 13px;
+    transition: all 0.2s;
+  }
+  .period .opt:hover { background: var(--glass-strong); color: var(--cocoa); }
+  .period .opt.active {
+    background: var(--honey);
+    border-color: var(--honey-deep);
+    color: white;
+  }
+  .period .custom-range {
+    display: none;
+    margin-top: 12px;
+    gap: 8px; align-items: center;
+    font-size: 13px;
+  }
+  .period .custom-range.show { display: flex; flex-wrap: wrap; }
+  .period .custom-range input[type="date"] {
+    flex: 1; min-width: 130px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-strong);
+    color: var(--cocoa);
+    font: inherit; font-size: 13px;
+  }
+  .period .custom-range span { color: var(--text-muted); font-size: 11px; }
+  .period .applies-to {
     margin-top: 10px;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .period .applies-to label { cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .period .applies-to input { accent-color: var(--honey-deep); }
+
+  /* Pie chart */
+  .pie-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 24px 20px 18px;
+    margin-bottom: 22px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .pie-mode {
+    display: flex; gap: 6px; justify-content: center; margin-bottom: 18px;
+  }
+  .pie-mode button {
+    padding: 6px 18px; border-radius: 999px;
+    background: transparent; border: 1px solid var(--glass-border);
+    color: var(--text-soft); cursor: pointer; font: inherit; font-size: 12px;
+    letter-spacing: 0.06em; transition: all 0.2s;
+  }
+  .pie-mode button.active {
+    background: var(--cocoa);
+    border-color: var(--cocoa);
+    color: var(--cream-light);
+  }
+  .pie-container {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 18px;
+    align-items: center;
+  }
+  @media (max-width: 520px) {
+    .pie-container { grid-template-columns: 1fr; }
+  }
+  .pie-svg { width: 100%; max-width: 220px; aspect-ratio: 1; }
+  .pie-svg path { transition: opacity 0.2s; cursor: pointer; }
+  .pie-svg path:hover { opacity: 0.75; }
+  .pie-svg .center-text {
+    font-family: 'Fraunces', serif;
+    fill: var(--cocoa);
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+  .pie-svg .center-num { font-size: 28px; font-weight: 500; }
+  .pie-svg .center-lbl { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; fill: var(--text-muted); font-family: 'Outfit', sans-serif; }
+  .pie-legend {
+    display: flex; flex-direction: column; gap: 6px;
+    font-size: 12px; min-width: 0;
+  }
+  .pie-legend .item {
+    display: grid; grid-template-columns: 12px 1fr auto; gap: 8px;
+    align-items: center;
+  }
+  .pie-legend .swatch {
+    width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+  }
+  .pie-legend .name {
+    color: var(--cocoa); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .pie-legend .pct {
+    color: var(--text-muted); font-variant-numeric: tabular-nums;
+    font-size: 11px;
+  }
+  .pie-empty {
+    text-align: center; padding: 40px 0;
+    color: var(--text-muted); font-size: 13px;
   }
 
+  /* Summary cards */
   .summary {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 480px) {
+    .summary { grid-template-columns: 1fr; }
   }
   .summary .card {
     background: var(--glass);
     border: 1px solid var(--glass-border);
     border-radius: 18px;
-    padding: 20px 22px;
+    padding: 18px 20px;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
+  .summary .card.wide { grid-column: 1 / -1; }
   .summary .label {
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 8px;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
   }
   .summary .value {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
-    font-size: clamp(28px, 7vw, 40px);
-    line-height: 1;
-    color: var(--cocoa);
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(26px, 6vw, 36px);
+    line-height: 1; color: var(--cocoa);
     letter-spacing: -0.02em;
   }
-  .summary .sub {
-    margin-top: 6px;
-    font-size: 12px;
-    color: var(--text-soft);
+  .summary .value.text {
+    font-family: 'Outfit', sans-serif; font-weight: 500;
+    font-size: clamp(15px, 3.4vw, 20px);
   }
+  .summary .sub { margin-top: 6px; font-size: 12px; color: var(--text-soft); }
 
+  /* Groups */
   section.group {
-    margin-bottom: 28px;
-  }
-  section.group h2 {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 500;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--mocha);
-    margin-bottom: 12px;
-    padding-left: 4px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  section.group h2::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--glass-border), transparent);
-  }
-
-  .row {
     background: var(--glass);
     border: 1px solid var(--glass-border);
-    border-radius: 14px;
+    border-radius: 18px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    overflow: hidden;
+  }
+  section.group summary {
+    list-style: none;
+    cursor: pointer;
     padding: 14px 18px;
-    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 12px;
+    user-select: none;
+  }
+  section.group summary::-webkit-details-marker { display: none; }
+  section.group .chev {
+    width: 12px; height: 12px;
+    border-right: 1.5px solid var(--mocha);
+    border-bottom: 1.5px solid var(--mocha);
+    transform: rotate(45deg);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-top: -3px;
+  }
+  section.group[open] .chev { transform: rotate(-135deg); margin-top: 3px; }
+  section.group .grp-title {
+    flex: 1;
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--mocha); font-weight: 500;
+  }
+  section.group .grp-total {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--cocoa);
+    font-variant-numeric: tabular-nums;
+  }
+  section.group .rows { padding: 0 12px 12px; }
+
+  .row {
+    background: rgba(255, 252, 245, 0.4);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 6px;
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     position: relative;
     overflow: hidden;
   }
+  .row:last-child { margin-bottom: 0; }
   .row .bar {
-    position: absolute;
-    inset: 0 auto 0 0;
-    background: linear-gradient(90deg, rgba(201, 168, 122, 0.18), rgba(201, 168, 122, 0.06));
+    position: absolute; inset: 0 auto 0 0;
+    background: linear-gradient(90deg, rgba(201, 168, 122, 0.22), rgba(201, 168, 122, 0.06));
     width: 0%;
     transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 0;
   }
   .row .title, .row .stat { position: relative; z-index: 1; }
-  .row .title {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 400;
-    font-size: 15px;
-    color: var(--cocoa);
-  }
+  .row .title { font-size: 14px; color: var(--cocoa); }
   .row .title .meta {
-    display: block;
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 2px;
-    letter-spacing: 0.02em;
+    display: block; font-size: 10px; color: var(--text-muted);
+    margin-top: 2px; letter-spacing: 0.02em;
   }
-  .row .stat {
-    text-align: right;
-  }
+  .row .stat { text-align: right; }
   .row .stat .count {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    font-size: 22px;
-    color: var(--cocoa-deep);
-    line-height: 1;
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 20px; color: var(--cocoa-deep); line-height: 1;
+    font-variant-numeric: tabular-nums;
   }
   .row .stat .unique {
-    display: block;
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-top: 4px;
+    display: block; font-size: 9px; color: var(--text-muted);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px;
   }
   .row.zero .stat .count { color: var(--text-muted); }
-  .row.top1 { border-color: rgba(176, 141, 94, 0.35); }
+  .row.top1 { border-color: rgba(176, 141, 94, 0.4); }
   .row.top1 .stat .count { color: var(--honey-deep); }
 
-  .loading-msg {
-    text-align: center;
-    padding: 30px;
-    color: var(--text-soft);
-    font-size: 14px;
+  .loading-msg, .error-msg {
+    text-align: center; padding: 24px; font-size: 13px; border-radius: 12px;
   }
-
+  .loading-msg { color: var(--text-soft); }
   .error-msg {
-    text-align: center;
-    padding: 20px;
     color: #a04040;
-    font-size: 13px;
     background: rgba(160, 64, 64, 0.06);
     border: 1px solid rgba(160, 64, 64, 0.18);
-    border-radius: 12px;
     margin: 12px 0;
   }
 
   footer {
-    text-align: center;
-    margin-top: 40px;
-    font-size: 12px;
-    color: var(--text-muted);
+    text-align: center; margin-top: 32px; font-size: 12px; color: var(--text-muted);
   }
   footer a {
-    color: var(--mocha);
-    text-decoration: none;
+    color: var(--mocha); text-decoration: none;
     border-bottom: 1px solid rgba(139, 111, 78, 0.3);
   }
   footer a:hover { color: var(--cocoa); border-color: var(--cocoa); }
-
-  .controls {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-  .controls button {
-    font-family: 'Outfit', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    padding: 8px 16px;
-    border-radius: 999px;
-    background: transparent;
-    border: 1px solid var(--glass-border);
-    color: var(--text-soft);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .controls button:hover { background: var(--glass); color: var(--cocoa); }
-
-  @media (max-width: 480px) {
-    body { padding: 20px 14px 60px; }
-    .summary { grid-template-columns: 1fr; }
-    .row { padding: 12px 14px; }
-  }
 </style>
 </head>
 <body>
@@ -270,25 +345,66 @@
     <div class="updated" id="updated">Carregando…</div>
   </header>
 
+  <div class="period">
+    <div class="label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Período
+    </div>
+    <div class="options" id="period-options">
+      <button class="opt active" data-period="all">Tudo</button>
+      <button class="opt" data-period="today">Hoje</button>
+      <button class="opt" data-period="7d">7 dias</button>
+      <button class="opt" data-period="30d">30 dias</button>
+      <button class="opt" data-period="custom">Custom</button>
+    </div>
+    <div class="custom-range" id="custom-range">
+      <input type="date" id="date-start" aria-label="Data inicial">
+      <span>até</span>
+      <input type="date" id="date-end" aria-label="Data final">
+    </div>
+    <div class="applies-to">
+      <label><input type="checkbox" id="apply-to-pie" checked> Aplicar período também ao gráfico</label>
+    </div>
+  </div>
+
+  <div class="pie-card">
+    <div class="pie-mode">
+      <button class="active" data-mode="grupos">Grupos</button>
+      <button data-mode="solo">Solo</button>
+    </div>
+    <div class="pie-container">
+      <svg class="pie-svg" id="pie-svg" viewBox="0 0 200 200" aria-label="Distribuição de cliques">
+        <text class="center-text center-num" x="100" y="93" id="pie-center-num">—</text>
+        <text class="center-text center-lbl" x="100" y="112" id="pie-center-lbl">cliques</text>
+      </svg>
+      <div class="pie-legend" id="pie-legend"></div>
+    </div>
+  </div>
+
   <div class="summary">
+    <div class="card">
+      <div class="label">Visitas</div>
+      <div class="value" id="total-visits">—</div>
+      <div class="sub" id="visits-sub">na home</div>
+    </div>
     <div class="card">
       <div class="label">Cliques totais</div>
       <div class="value" id="total-clicks">—</div>
-      <div class="sub">acumulado desde sempre</div>
+      <div class="sub" id="conv-rate">—</div>
     </div>
-    <div class="card">
+    <div class="card wide">
       <div class="label">Link mais clicado</div>
-      <div class="value" id="top-link" style="font-size: clamp(16px, 4vw, 22px); font-family: 'Outfit', sans-serif; font-weight: 500;">—</div>
+      <div class="value text" id="top-link">—</div>
       <div class="sub" id="top-count">—</div>
     </div>
   </div>
 
   <div id="content">
-    <div class="loading-msg">Buscando dados do GoatCounter…</div>
+    <div class="loading-msg">Buscando dados…</div>
   </div>
 
   <footer>
-    Dados em tempo real de <a href="https://thuani.goatcounter.com" target="_blank" rel="noopener">thuani.goatcounter.com</a> ·
+    Dados de <a href="https://thuani.goatcounter.com" target="_blank" rel="noopener">GoatCounter</a> via Cloudflare Worker ·
     <a href="./">voltar ao site</a>
   </footer>
 </div>
@@ -299,6 +415,7 @@
   const GROUPS = [
     {
       title: 'Outside 28 · Petala Beauty',
+      color: '#c9a87a',
       links: [
         { slug: 'link-outside-28-perfume',                  label: 'Outside 28 · Perfume' },
         { slug: 'link-kit-outside-28-essencia-completa',    label: 'Kit Outside 28 Essência Completa' },
@@ -309,6 +426,7 @@
     },
     {
       title: 'Polishop',
+      color: '#b08d5e',
       links: [
         { slug: 'link-prancha-secadora-airliss',            label: 'Prancha Secadora Airliss' },
         { slug: 'link-escova-hot-brush-4-em-1',             label: 'Escova Hot Brush 4 em 1' },
@@ -317,6 +435,7 @@
     },
     {
       title: 'Outros parceiros',
+      color: '#8b6f4e',
       links: [
         { slug: 'link-teeva-official',                      label: 'Teeva Official' },
         { slug: 'link-temu-achadinhos',                     label: 'Temu · Achadinhos' }
@@ -324,6 +443,7 @@
     },
     {
       title: 'Redes sociais',
+      color: '#4a3a2a',
       links: [
         { slug: 'social-instagram',                         label: 'Instagram' },
         { slug: 'social-tiktok',                            label: 'TikTok' }
@@ -331,11 +451,30 @@
     },
     {
       title: 'Contato',
+      color: '#d4c2a8',
       links: [
         { slug: 'email',                                    label: 'Email' }
       ]
     }
   ];
+
+  // Generate tints for "solo" mode within each group
+  function tint(hex, amount) {
+    const r = parseInt(hex.substr(1,2), 16);
+    const g = parseInt(hex.substr(3,2), 16);
+    const b = parseInt(hex.substr(5,2), 16);
+    const adj = c => Math.max(0, Math.min(255, Math.round(c + amount)));
+    return '#' + [adj(r), adj(g), adj(b)].map(v => v.toString(16).padStart(2,'0')).join('');
+  }
+
+  let state = {
+    period: 'all',     // 'all' | 'today' | '7d' | '30d' | 'custom'
+    customStart: '',
+    customEnd: '',
+    applyToPie: true,
+    pieMode: 'grupos', // 'grupos' | 'solo'
+    cache: {}          // { '': {slug: data}, 'start=...&end=...': {slug: data} }
+  };
 
   function parseInt0(v) {
     if (v === null || v === undefined) return 0;
@@ -343,12 +482,43 @@
     return isNaN(n) ? 0 : n;
   }
 
-  async function fetchCount(slug) {
+  function fmtDate(d) {
+    return d.getFullYear() + '-' +
+           String(d.getMonth()+1).padStart(2,'0') + '-' +
+           String(d.getDate()).padStart(2,'0');
+  }
+
+  function periodToParams(period) {
+    const today = new Date();
+    if (period === 'all') return '';
+    if (period === 'today') {
+      const t = fmtDate(today);
+      return '?start=' + t + '&end=' + t;
+    }
+    if (period === '7d') {
+      const start = new Date(today); start.setDate(start.getDate() - 6);
+      return '?start=' + fmtDate(start) + '&end=' + fmtDate(today);
+    }
+    if (period === '30d') {
+      const start = new Date(today); start.setDate(start.getDate() - 29);
+      return '?start=' + fmtDate(start) + '&end=' + fmtDate(today);
+    }
+    if (period === 'custom') {
+      const s = state.customStart, e = state.customEnd;
+      if (!s && !e) return '';
+      const parts = [];
+      if (s) parts.push('start=' + s);
+      if (e) parts.push('end=' + e);
+      return '?' + parts.join('&');
+    }
+    return '';
+  }
+
+  async function fetchCount(slug, params) {
     try {
-      const url = `${SITE}/counter/${encodeURIComponent(slug)}.json`;
+      const url = `${SITE}/counter/${encodeURIComponent(slug)}.json${params}`;
       const res = await fetch(url, { mode: 'cors' });
-      // GoatCounter returns 404 with valid JSON body {"count":"0","count_unique":"0"}
-      // for paths with no data yet, so parse regardless of status code.
+      // GoatCounter returns 404 with valid JSON for zero-count paths
       const data = await res.json();
       return {
         count: parseInt0(data.count),
@@ -360,73 +530,157 @@
     }
   }
 
-  function fmtTime(d) {
-    return d.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+  async function fetchAll(params) {
+    if (state.cache[params]) return state.cache[params];
+
+    const visits = fetchCount('/', params);
+    const links = GROUPS.flatMap(g => g.links.map(l => [l.slug, fetchCount(l.slug, params)]));
+    const [v, ...rest] = await Promise.all([visits, ...links.map(([, p]) => p)]);
+    const data = { visits: v };
+    links.forEach(([slug], i) => { data[slug] = rest[i]; });
+    state.cache[params] = data;
+    return data;
   }
 
-  function render(allData) {
+  // ---------- Pie chart ----------
+  function pieSlicePath(cx, cy, r, startAngle, endAngle) {
+    if (endAngle - startAngle >= Math.PI * 2 - 0.0001) {
+      // Full circle: draw two arcs
+      return `M ${cx-r} ${cy} a ${r} ${r} 0 1 0 ${r*2} 0 a ${r} ${r} 0 1 0 ${-r*2} 0 Z`;
+    }
+    const x1 = cx + r * Math.cos(startAngle);
+    const y1 = cy + r * Math.sin(startAngle);
+    const x2 = cx + r * Math.cos(endAngle);
+    const y2 = cy + r * Math.sin(endAngle);
+    const large = (endAngle - startAngle) > Math.PI ? 1 : 0;
+    return `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
+  }
+
+  function renderPie(data) {
+    const svg = document.getElementById('pie-svg');
+    const legend = document.getElementById('pie-legend');
+    const centerNum = document.getElementById('pie-center-num');
+
+    // Remove existing paths
+    svg.querySelectorAll('path').forEach(p => p.remove());
+
+    let slices;
+    if (state.pieMode === 'grupos') {
+      slices = GROUPS.map(g => ({
+        label: g.title,
+        value: g.links.reduce((s, l) => s + (data[l.slug]?.count || 0), 0),
+        color: g.color
+      })).filter(s => s.value > 0);
+    } else {
+      // Solo: each link with a tint of its group color
+      slices = [];
+      GROUPS.forEach(g => {
+        g.links.forEach((l, i) => {
+          const v = data[l.slug]?.count || 0;
+          if (v > 0) {
+            // tint within group: lighter for first, original for last
+            const amt = (i - (g.links.length - 1) / 2) * 18;
+            slices.push({
+              label: l.label,
+              value: v,
+              color: tint(g.color, -amt)
+            });
+          }
+        });
+      });
+    }
+
+    const total = slices.reduce((s, x) => s + x.value, 0);
+    centerNum.textContent = total.toLocaleString('pt-BR');
+
+    if (total === 0) {
+      legend.innerHTML = '<div class="pie-empty">Sem cliques no período selecionado.</div>';
+      return;
+    }
+
+    // Sort descending so biggest slice is on top
+    slices.sort((a, b) => b.value - a.value);
+
+    let angle = -Math.PI / 2;
+    const cx = 100, cy = 100, r = 80;
+    slices.forEach(s => {
+      const a = (s.value / total) * Math.PI * 2;
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', pieSlicePath(cx, cy, r, angle, angle + a));
+      path.setAttribute('fill', s.color);
+      const pct = ((s.value / total) * 100).toFixed(1);
+      path.setAttribute('aria-label', `${s.label}: ${s.value} cliques (${pct}%)`);
+      // Insert before center text
+      svg.insertBefore(path, svg.firstChild);
+      angle += a;
+    });
+
+    legend.innerHTML = slices.map(s => {
+      const pct = ((s.value / total) * 100).toFixed(1);
+      return `<div class="item">
+        <span class="swatch" style="background:${s.color}"></span>
+        <span class="name" title="${s.label}">${s.label}</span>
+        <span class="pct">${s.value} · ${pct}%</span>
+      </div>`;
+    }).join('');
+  }
+
+  // ---------- Groups rendering ----------
+  function renderGroups(data) {
     const container = document.getElementById('content');
     container.innerHTML = '';
 
-    // Find max across all to scale bars
+    // Find max for bar scaling (across all groups, click-type only)
     let maxCount = 0;
-    let topLink = null;
-    let totalClicks = 0;
     GROUPS.forEach(g => g.links.forEach(l => {
-      const d = allData[l.slug];
-      if (!d) return;
-      totalClicks += d.count;
-      if (d.count > maxCount) { maxCount = d.count; topLink = { label: l.label, count: d.count }; }
+      const c = data[l.slug]?.count || 0;
+      if (c > maxCount) maxCount = c;
     }));
 
-    // Update summary cards
-    document.getElementById('total-clicks').textContent = totalClicks.toLocaleString('pt-BR');
-    if (topLink && topLink.count > 0) {
-      document.getElementById('top-link').textContent = topLink.label;
-      document.getElementById('top-count').textContent = `${topLink.count.toLocaleString('pt-BR')} clique${topLink.count === 1 ? '' : 's'}`;
-    } else {
-      document.getElementById('top-link').textContent = '—';
-      document.getElementById('top-count').textContent = 'aguardando primeiros cliques';
-    }
-
-    // Render groups
     GROUPS.forEach(group => {
-      const section = document.createElement('section');
-      section.className = 'group';
-      const h2 = document.createElement('h2');
-      h2.textContent = group.title;
-      section.appendChild(h2);
+      const groupTotal = group.links.reduce((s, l) => s + (data[l.slug]?.count || 0), 0);
 
-      // Sort within group by count desc
+      const details = document.createElement('details');
+      details.className = 'group';
+      details.open = true;  // default open as requested
+
+      const summary = document.createElement('summary');
+      summary.innerHTML = `
+        <span class="chev"></span>
+        <span class="grp-title">${group.title}</span>
+        <span class="grp-total">${groupTotal.toLocaleString('pt-BR')}</span>
+      `;
+      details.appendChild(summary);
+
+      const rowsWrap = document.createElement('div');
+      rowsWrap.className = 'rows';
+
       const sorted = group.links.slice().sort((a, b) => {
-        const da = allData[a.slug]?.count || 0;
-        const db = allData[b.slug]?.count || 0;
+        const da = data[a.slug]?.count || 0;
+        const db = data[b.slug]?.count || 0;
         return db - da;
       });
 
       sorted.forEach(link => {
-        const d = allData[link.slug] || { count: 0, count_unique: 0 };
+        const d = data[link.slug] || { count: 0, count_unique: 0 };
         const row = document.createElement('div');
         row.className = 'row';
         if (d.count === 0) row.classList.add('zero');
-        if (topLink && link.label === topLink.label && d.count > 0) row.classList.add('top1');
 
         const bar = document.createElement('div');
         bar.className = 'bar';
         const pct = maxCount > 0 ? (d.count / maxCount) * 100 : 0;
         row.appendChild(bar);
 
-        const titleEl = document.createElement('div');
-        titleEl.className = 'title';
-        titleEl.innerHTML = `${link.label}<span class="meta">${link.slug}</span>`;
-        row.appendChild(titleEl);
+        row.insertAdjacentHTML('beforeend', `
+          <div class="title">${link.label}<span class="meta">${link.slug}</span></div>
+          <div class="stat">
+            <span class="count">${d.count.toLocaleString('pt-BR')}</span>
+            <span class="unique">${d.count_unique.toLocaleString('pt-BR')} únicos</span>
+          </div>
+        `);
 
-        const statEl = document.createElement('div');
-        statEl.className = 'stat';
-        statEl.innerHTML = `<span class="count">${d.count.toLocaleString('pt-BR')}</span><span class="unique">${d.count_unique.toLocaleString('pt-BR')} únicos</span>`;
-        row.appendChild(statEl);
-
-        section.appendChild(row);
+        rowsWrap.appendChild(row);
 
         // Animate bar
         requestAnimationFrame(() => {
@@ -434,37 +688,125 @@
         });
       });
 
-      container.appendChild(section);
+      details.appendChild(rowsWrap);
+      container.appendChild(details);
     });
-
-    document.getElementById('updated').textContent = 'Atualizado: ' + fmtTime(new Date());
   }
 
-  async function load() {
-    const allSlugs = GROUPS.flatMap(g => g.links.map(l => l.slug));
-    const results = await Promise.all(allSlugs.map(s => fetchCount(s).then(r => [s, r])));
-    const allData = Object.fromEntries(results);
+  // ---------- Summary ----------
+  function renderSummary(data) {
+    const visits = data.visits?.count || 0;
+    let totalClicks = 0;
+    let topLink = null;
+    GROUPS.forEach(g => g.links.forEach(l => {
+      const c = data[l.slug]?.count || 0;
+      totalClicks += c;
+      if (!topLink || c > topLink.count) topLink = { label: l.label, count: c };
+    }));
 
-    // Check if any call succeeded (returned parseable JSON)
-    const anyOk = results.some(([, r]) => r.ok);
-    if (!anyOk) {
-      document.getElementById('content').innerHTML =
-        '<div class="error-msg">Não consegui buscar os dados. ' +
-        'Verifique se o Worker em <code>' + SITE + '</code> está ativo, ' +
-        'ou se há um bloqueador filtrando o subdomínio.</div>';
-      document.getElementById('updated').textContent = 'Erro ao carregar';
-      return;
+    document.getElementById('total-visits').textContent = visits.toLocaleString('pt-BR');
+    document.getElementById('total-clicks').textContent = totalClicks.toLocaleString('pt-BR');
+
+    const convRate = visits > 0 ? ((totalClicks / visits) * 100).toFixed(1) + '% conversão' : '—';
+    document.getElementById('conv-rate').textContent = convRate;
+
+    if (topLink && topLink.count > 0) {
+      document.getElementById('top-link').textContent = topLink.label;
+      document.getElementById('top-count').textContent =
+        topLink.count.toLocaleString('pt-BR') + ' clique' + (topLink.count === 1 ? '' : 's');
+    } else {
+      document.getElementById('top-link').textContent = '—';
+      document.getElementById('top-count').textContent = 'aguardando primeiros cliques';
     }
-
-    render(allData);
   }
 
-  load();
+  // ---------- Main load + render flow ----------
+  async function reload() {
+    document.getElementById('updated').textContent = 'Carregando…';
 
-  // Refresh button
-  document.addEventListener('DOMContentLoaded', () => {
-    // Could add a refresh button if desired
+    const params = periodToParams(state.period);
+    const piePeriod = state.applyToPie ? state.period : 'all';
+    const pieParams = periodToParams(piePeriod);
+
+    try {
+      const [summaryData, pieData] = await Promise.all([
+        fetchAll(params),
+        params === pieParams ? Promise.resolve(null) : fetchAll(pieParams)
+      ]);
+
+      const anyOk = Object.values(summaryData).some(v => v && v.ok);
+      if (!anyOk) {
+        document.getElementById('content').innerHTML =
+          '<div class="error-msg">Não consegui buscar os dados. ' +
+          'Verifique se o Worker em <code>' + SITE + '</code> está ativo.</div>';
+        document.getElementById('updated').textContent = 'Erro ao carregar';
+        return;
+      }
+
+      renderSummary(summaryData);
+      renderGroups(summaryData);
+      renderPie(pieData || summaryData);
+
+      document.getElementById('updated').textContent =
+        'Atualizado: ' + new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+    } catch (e) {
+      document.getElementById('content').innerHTML =
+        '<div class="error-msg">Erro: ' + e.message + '</div>';
+      document.getElementById('updated').textContent = 'Erro';
+    }
+  }
+
+  // ---------- Event wiring ----------
+  document.getElementById('period-options').addEventListener('click', (ev) => {
+    const btn = ev.target.closest('button.opt');
+    if (!btn) return;
+    document.querySelectorAll('#period-options .opt').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.period = btn.dataset.period;
+    const customRange = document.getElementById('custom-range');
+    if (state.period === 'custom') {
+      customRange.classList.add('show');
+      // Pre-fill with last 7 days if empty
+      if (!state.customStart) {
+        const today = new Date();
+        const wkAgo = new Date(today); wkAgo.setDate(wkAgo.getDate() - 6);
+        document.getElementById('date-start').value = fmtDate(wkAgo);
+        document.getElementById('date-end').value = fmtDate(today);
+        state.customStart = fmtDate(wkAgo);
+        state.customEnd = fmtDate(today);
+      }
+    } else {
+      customRange.classList.remove('show');
+    }
+    reload();
   });
+
+  document.getElementById('date-start').addEventListener('change', (ev) => {
+    state.customStart = ev.target.value;
+    if (state.period === 'custom') reload();
+  });
+  document.getElementById('date-end').addEventListener('change', (ev) => {
+    state.customEnd = ev.target.value;
+    if (state.period === 'custom') reload();
+  });
+
+  document.getElementById('apply-to-pie').addEventListener('change', (ev) => {
+    state.applyToPie = ev.target.checked;
+    reload();
+  });
+
+  document.querySelectorAll('.pie-mode button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pie-mode button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.pieMode = btn.dataset.mode;
+      // No re-fetch needed, just re-render pie with current data
+      const params = periodToParams(state.applyToPie ? state.period : 'all');
+      if (state.cache[params]) renderPie(state.cache[params]);
+    });
+  });
+
+  reload();
 </script>
 
 </body>
